@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const AllUsers = () => {
@@ -61,11 +60,30 @@ const AllUsers = () => {
       .catch(err => console.log(err))
     }
 
-    const handleDelete = async(id) =>{
-      const data = await axios.delete(`http://localhost:3001/delete/${id}`)
-      console.log(id)
-      getFetch();
-    }
+    // const handleDelete = async(id) =>{
+    //   const data = await axios.delete(`http://localhost:3001/delete/${id}`)
+    //   console.log(id)
+    //   console.log(data);
+    //   getFetch();
+    // }
+
+    const handleDelete = async (id) => {
+      // Kullanıcıya onay mesajı göstermek için bir onay almak üzere bir confirm dialog kullanabiliriz.
+      const isConfirmed = window.confirm("Silmek isteyirsiniz?");
+    
+      if (isConfirmed) {
+        try {
+          const response = await axios.delete(`http://localhost:3001/delete/${id}`);
+          console.log(response);
+          // Silme başarılı olduğunda yeniden getirme işlemini gerçekleştirir.
+          getFetch();
+        } catch (error) {
+          console.error("Silme emeliyyati başarısız oldu:", error);
+        }
+      } else {
+        console.log("Silme emeliyyati legv edildi.");
+      }
+    };
 
   return (
     <>
@@ -158,24 +176,24 @@ const AllUsers = () => {
                                     </div>
                                   </div>
                                 </div>
-                                <button  type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#exampleModal3" >Delete</button>
-                                <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
-                                  <div class="modal-dialog ">
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel3">Delete Task</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                      </div>
-                                      <div class="modal-body">
-                                        <p>Are you sure you want to delete?</p>
-                                      </div>
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                        <button type="button" onClick={()=>handleDelete(user?._id)} data-bs-dismiss="modal" class="btn btn-danger">Delete</button>
+                                <button  type="button" onClick={()=>handleDelete(user?._id)} class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#exampleModal3" >Delete</button>
+                                  {/* <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+                                    <div class="modal-dialog ">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="exampleModalLabel3">Delete Task</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <p>Are you sure you want to delete?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                          <button type="button" data-bs-dismiss="modal" class="btn btn-danger">Delete</button>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                </div>
+                                  </div> */}
                                 </td>
                             </tr>           
                         })

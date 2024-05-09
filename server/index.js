@@ -50,6 +50,7 @@ app.delete('/delete/:id',async(req,res)=>{
     console.log(id)
     const data = await UserModel.deleteOne({_id : id})
     res.send({success:true, message : "data deleted successfully!", data: data})
+    
 })
 //getuserByid
 app.get('/:userId', (req, res) => {
