@@ -1,10 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
+
 const AllUsers = () => {
 
     const [users,setUsers] = useState([]);
     const [byuser, setByuser] = useState({});
+    const [filterText, setFilterText] = useState("");
+
+
+    const filteredData = users.filter((item) => {
+      return (
+        item.name.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.description.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.date.toLowerCase().includes(filterText.toLowerCase())
+      );
+    });
+    
+    const tableData = filterText ? filteredData : users;
+
+    
+
+  const handleInputChange = (e) => {
+    setFilterText(e.target.value);
+  };
 
     useEffect(()=>{
       getFetch();
@@ -90,8 +109,17 @@ const AllUsers = () => {
     
     <div className='d-flex vh-100 bg-white justify-content-center align-items-center'>
         <div className='w-50 bg-white shadow-sm border border-3 rounded p-3'>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Create</button>
-
+          <div className='d-flex justify-content-between'>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Create +</button>
+        <input 
+        className='rounded p-2' 
+        type="text"
+        placeholder="Search..."
+        value={filterText}
+        onChange={handleInputChange}
+      />
+          </div>  
+        
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog ">
@@ -127,6 +155,8 @@ const AllUsers = () => {
     </div>
   </div>
 </div>
+    <div>
+    </div>
 
             <table className='table'>
                 <thead>
@@ -136,10 +166,10 @@ const AllUsers = () => {
                         <th>Expire Date</th>
                         <th>Action</th>
                     </tr>
-                </thead>
+                </thead>  
                 <tbody >
                     {
-                    users.map((user)=>{
+                    tableData.map((user)=>{
                     return  <tr>
                                 <td>{user.name}</td>
                                 <td>{user.description}</td>
